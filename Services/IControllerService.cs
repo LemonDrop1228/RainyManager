@@ -12,6 +12,7 @@ namespace RainyManager.Services
     public interface IControllerService
     {
         void InitializeViews(IEnumerable<IBaseView> views);
+        IBaseView GetView(ViewType settings);
     }
 
     public class ControllerService : IControllerService
@@ -23,8 +24,10 @@ namespace RainyManager.Services
             if(views.Count() == 0)
                 return;
             ViewCollection = new ObservableCollection<IBaseView>();
-            ViewCollection.AddRange(views.OrderBy(v => v.ViewMenuData.ViewIndex).ToArray());
+            ViewCollection.AddRange(views.ToArray());
         }
+
+        IBaseView IControllerService.GetView(ViewType viewType) => ViewCollection.FirstOrDefault(v => v.ViewMenuData.ViewType == viewType);
     }
 
 }

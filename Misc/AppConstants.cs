@@ -8,6 +8,15 @@ namespace RainyManager.Misc
 {
     public enum ViewType
     {
-        DownloadStatus
+        DownloadStatus,
+        Settings
+    }
+
+    [Flags]
+    public enum ModDetailSections
+    {
+        ReadMe=1,
+        Deps=2,
+        Versions=3
     }
 }

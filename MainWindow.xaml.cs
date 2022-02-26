@@ -2,6 +2,7 @@
 using RainyManager.Misc;
 using RainyManager.Models;
 using RainyManager.Services;
+using RainyManager.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,9 +25,13 @@ namespace RainyManager
     public partial class MainWindow : Window
     {
         private readonly IThundersoreAPIService thundersoreAPIService;
+        private readonly ILoggerService logger;
+        private readonly IControllerService controller;
         private string modSearchText;
 
         public string ModInteractionText { get; set; }
+        public ModDetailSections CurrentMDS { get; set; }
+        public IBaseView CurrentDiag { get; set; }
         public ObservableCollection<ModModel> ModList { get; private set; }
         public ObservableCollection<ModModel> DisplayModList { get; private set; }
         public string ModSearchText
@@ -41,11 +46,17 @@ namespace RainyManager
 
         public ModModel FocusedMod { get; private set; }
 
-        public MainWindow(IThundersoreAPIService thundersoreAPIService)
+        public MainWindow(IThundersoreAPIService thundersoreAPIService,
+            ILoggerService logger,
+            IControllerService controller)
         {
             this.DataContext = this;
             InitializeComponent();
             this.thundersoreAPIService = thundersoreAPIService;
+            this.logger = logger;
+            this.controller = controller;
+            logger.InitializeConsole(ConsoleTB);
+            CurrentMDS = ModDetailSections.ReadMe;
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -79,13 +90,22 @@ namespace RainyManager
         {
             if (ModSearchText.NullOrEmpty())
                 DisplayModList = ModList;
+            else
+                DisplayModList = ModList.Where(m => m.Name.ToLower().Contains(ModSearchText.ToLower()))?.ToObservableCollection() ?? ModList;
 
-            DisplayModList = ModList.Where(m => m.Name.ToLower().Contains(ModSearchText.ToLower())).ToObservableCollection();
+            if(DisplayModList.Count > 0)
+                ModListBox.SelectedIndex = 0;
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             FocusedMod = (ModModel)ModListBox.SelectedItem;
+        }
+
+        private void ConfigButton_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentDiag = controller.GetView(ViewType.Settings);
+            MainDialogHost.IsOpen = true;
         }
     }
 }

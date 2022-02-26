@@ -7,6 +7,9 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:st="http://schemas.spicytaco.io/"
         xmlns:xf="clr-namespace:XamlFlair;assembly=XamlFlair.WPF"
+        xmlns:c="clr-namespace:NKristek.Wpf.Converters;assembly=NKristek.Wpf.Converters"
+        xmlns:cx="clr-namespace:DotNetProjects.WPF.Converters.Converters;assembly=DotNetProjects.WPF.Converters"
+        xmlns:lc="clr-namespace:RainyManager.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="750" Width="1200" 
         MinHeight="375" MinWidth="600"
@@ -15,293 +18,340 @@
         AllowsTransparency="True" Background="Transparent" 
         MouseDown="Window_MouseDown" Loaded="Window_Loaded" Topmost="True"
         >
+    <Window.Resources>
+        <lc:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+    </Window.Resources>
     <Border Padding="5">
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="45"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            
-            <!--Backdrop Card-->
-            <Border Padding="10" Grid.Row="0" Grid.RowSpan="2" Margin="0 0 0 10">
-                <materialDesign:Card UniformCornerRadius="3" >
-                    <materialDesign:Card.Background>
-                        <ImageBrush ImageSource="/Images/ror2_BG.png" Stretch="UniformToFill"/>
-                    </materialDesign:Card.Background>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="45"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-                </materialDesign:Card>
-            </Border>
+                <!--Backdrop Card-->
+                <Border Padding="10" Grid.Row="0" Grid.RowSpan="2" Margin="0 0 0 10">
+                    <materialDesign:Card UniformCornerRadius="3" >
+                        <materialDesign:Card.Background>
+                            <ImageBrush ImageSource="/Images/ror2_BG.png" Stretch="UniformToFill"/>
+                        </materialDesign:Card.Background>
 
-            <!--Title Card-->
-            <materialDesign:Card Background="{DynamicResource PrimaryHueMidBrush}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="public void RainyManager().Mods;" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" FontFamily="Consolas" FontSize="16"/>
-                    <st:StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="5 2 5 2" MarginBetweenChildren="5" HorizontalAlignment="Right">
-                        <Button Content="{materialDesign:PackIcon Kind=WindowMinimize}" Padding="5 0 5 0" 
+                    </materialDesign:Card>
+                </Border>
+
+                <!--Title Card-->
+                <materialDesign:Card Background="{DynamicResource PrimaryHueMidBrush}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="public void RainyManager().Mods;" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" FontFamily="Consolas" FontSize="16"/>
+                        <st:StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="5 2 5 2" MarginBetweenChildren="5" HorizontalAlignment="Right">
+                            <Button Content="{materialDesign:PackIcon Kind=Gear}" Padding="5 0 5 0" 
+                                Style="{StaticResource MaterialDesignFlatSecondaryMidBgButton}" Height="32" 
+                                Click="ConfigButton_Click"/>
+                            <Button Content="{materialDesign:PackIcon Kind=WindowMinimize}" Padding="5 0 5 0" 
                                 Style="{StaticResource MaterialDesignFlatSecondaryMidBgButton}" Height="32" VerticalContentAlignment="Bottom" 
                                 Click="MinimizeButton_Click"/>
-                        <Button Content="{materialDesign:PackIcon Kind=WindowMaximize}" Padding="5 0 5 0" 
+                            <Button Content="{materialDesign:PackIcon Kind=WindowMaximize}" Padding="5 0 5 0" 
                                 Style="{StaticResource MaterialDesignFlatSecondaryMidBgButton}" Height="32" 
                                 Click="MaxButton_Click_"/>
-                        <Button Content="{materialDesign:PackIcon Kind=power,Size=24}" Padding="5 0 5 0" 
+                            <Button Content="{materialDesign:PackIcon Kind=power,Size=24}" Padding="5 0 5 0" 
                                 Style="{StaticResource MaterialDesignFlatSecondaryMidBgButton}"  Height="32" 
                                 Background="Firebrick" BorderThickness="0" VerticalContentAlignment="Center" Foreground="AntiqueWhite"
                                 Click="CloseButton_Click"/>
-                    </st:StackPanel>
-                </Grid>
-            </materialDesign:Card>
+                        </st:StackPanel>
+                    </Grid>
+                </materialDesign:Card>
 
-            <Grid Grid.Row="1" >
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="150"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="1" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="150"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
-                <!--Mod Browser Panel-->
-                <materialDesign:Card Background="{DynamicResource PrimaryHueDarkBrush}" Margin="0 9 9 9" Padding="11"
+                    <!--Mod Browser Panel-->
+                    <materialDesign:Card Background="{DynamicResource PrimaryHueDarkBrush}" Margin="0 9 9 9" Padding="11"
                                      xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn}, Delay=5000}">
-                    <materialDesign:Card>
-                        <st:StackPanel Margin="3" MarginBetweenChildren="11">
-                            <st:StackPanel  MarginBetweenChildren="11">
-                                <TextBlock Text="Mod Browser" FontFamily="Cascadia Code" Foreground="#FFCACACA" FontSize="16" VerticalAlignment="Center"/>
-                                <materialDesign:Card materialDesign:ThemeAssist.Theme="Light">
-                                    <TextBox st:StackPanel.Fill="Fill" Margin="11 7" Text="{Binding ModSearchText, UpdateSourceTrigger=PropertyChanged}" materialDesign:TextFieldAssist.HasClearButton="True"
-                                             materialDesign:HintAssist.Hint="Search by typing here" />                                    
-                                </materialDesign:Card>
-                            </st:StackPanel>
-                            <ListBox x:Name="ModListBox"
+                        <materialDesign:Card>
+                            <st:StackPanel Margin="3" MarginBetweenChildren="11">
+                                <st:StackPanel  MarginBetweenChildren="11">
+                                    <TextBlock Text="Mod Browser" FontFamily="Cascadia Code" Foreground="#FFCACACA" FontSize="16" VerticalAlignment="Center"/>
+                                    <materialDesign:Card materialDesign:ThemeAssist.Theme="Light">
+                                        <TextBox st:StackPanel.Fill="Fill" Margin="11 7" Text="{Binding ModSearchText, UpdateSourceTrigger=PropertyChanged}" materialDesign:TextFieldAssist.HasClearButton="True"
+                                             materialDesign:HintAssist.Hint="Search by typing here" />
+                                    </materialDesign:Card>
+                                </st:StackPanel>
+                                <ListBox x:Name="ModListBox"
                                 ItemsSource="{Binding DisplayModList}" Margin="3" 
                                 st:StackPanel.Fill="Fill" SelectionChanged="ListBox_SelectionChanged"
                                      HorizontalAlignment="Stretch">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <materialDesign:Card HorizontalAlignment="Stretch" Width="10000">
-                                            <Grid Width="auto">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="32"/>
-                                                    <ColumnDefinition Width="11"/>
-                                                    <ColumnDefinition/>
-                                                </Grid.ColumnDefinitions>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <materialDesign:Card HorizontalAlignment="Stretch" Width="500" Margin="3" Padding="2" Background="{StaticResource PrimaryHueMidBrush}">
+                                                <Grid Width="auto">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="64"/>
+                                                        <ColumnDefinition/>
+                                                        <ColumnDefinition Width="100"/>
+                                                    </Grid.ColumnDefinitions>
 
-                                                <Image Source="{Binding LatestVersion.Icon}" Width="32" Height="32" VerticalAlignment="Center"/>
-                                                <st:StackPanel Grid.Column="2" MarginBetweenChildren="3" Orientation="Vertical" HorizontalAlignment="Left">
-                                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Top"/>
-                                                    <st:StackPanel MarginBetweenChildren="11" Orientation="Horizontal" HorizontalAlignment="Left">
-                                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                            <Run Text="[ Latest Version: "/>
-                                                            <Run Text="{Binding LatestVersion.VersionNumber}"/>
-                                                            <Run Text="]"/>
-                                                        </TextBlock>                                                        
-                                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                            <Run Text="[ Downloads: "/>
-                                                            <Run Text="{Binding LatestVersion.Downloads}"/>
-                                                            <Run Text="]"/>
-                                                        </TextBlock>
-                                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
-                                                            <Run Text="[ Rating: "/>
-                                                            <Run Text="{Binding RatingScore}"/>
-                                                            <Run Text="]"/>
-                                                        </TextBlock>
-                                                    </st:StackPanel>
-                                                </st:StackPanel>
+                                                    <Image Source="{Binding LatestVersion.Icon}" Width="36" Height="36" VerticalAlignment="Center" Margin="4"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding Name}" 
+                                                           VerticalAlignment="Center" FontSize="25"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding LatestVersion.VersionNumber}" HorizontalAlignment="Right" 
+                                                           VerticalAlignment="Center" FontSize="12" Margin="3"/>
+                                                </Grid>
+                                            </materialDesign:Card>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </st:StackPanel>
+                        </materialDesign:Card>
 
-                                                
-                                            </Grid>
-                                        </materialDesign:Card>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </st:StackPanel>
                     </materialDesign:Card>
-                    
-                </materialDesign:Card>
 
-                <!--Console Output Panel-->
-                <materialDesign:Card Background="{DynamicResource PrimaryHueDarkBrush}" Grid.Row="1" Margin="0 9 9 9" Padding="11"
+                    <!--Console Output Panel-->
+                    <materialDesign:Card Background="{DynamicResource PrimaryHueDarkBrush}" Grid.Row="1" Margin="0 9 9 9" Padding="11"
                                      xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn}, Delay=5150}">
-                    <materialDesign:Card>
-
+                        <materialDesign:Card>
+                            <materialDesign:Card Background="#FF001548" Padding="3" UniformCornerRadius="6">
+                                <TextBlock x:Name="ConsoleTB" Foreground="#FF57A7FF" />
+                            </materialDesign:Card>
+                        </materialDesign:Card>
                     </materialDesign:Card>
-                </materialDesign:Card>
 
-                <!--Mod Details Panel-->
-                <materialDesign:Card Background="{DynamicResource PrimaryHueDarkBrush}" Grid.Column="1" Margin="9 9 0 9" Padding="11"
+                    <!--Mod Details Panel-->
+                    <materialDesign:Card Background="{DynamicResource PrimaryHueDarkBrush}" Grid.Column="1" Margin="9 9 0 9" Padding="11"
                                      xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn}, Delay=5300}"
                                      >
-                    <materialDesign:Card Padding="11" Foreground="White" FontFamily="Consolas">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="124"/>
-                                <RowDefinition Height="2"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="124"/>
-                                    <ColumnDefinition Width="11"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                
-                                <Image Source="{Binding FocusedMod.LatestVersion.Icon}"/>
-
-                                <st:StackPanel Grid.Column="2">
-                                    <TextBlock Text="{Binding FocusedMod.Name}" FontSize="24"/>
-                                    <TextBlock FontSize="16" FontStyle="Italic">
-                                        <Run Text="by"/>
-                                        <Run Text="{Binding FocusedMod.Owner}"/>
-                                    </TextBlock>
-                                    <WrapPanel st:StackPanel.Fill="Fill">
-                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" >
-                                            <Run Text="[ Latest Version:"/>
-                                            <Run Text="{Binding FocusedMod.LatestVersion.VersionNumber}"/>
-                                            <Run Text="]"/>
-                                        </TextBlock>
-                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
-                                            <Run Text="[ Downloads:"/>
-                                            <Run Text="{Binding FocusedMod.LatestVersion.Downloads}"/>
-                                            <Run Text="]"/>
-                                        </TextBlock>
-                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
-                                            <Run Text="[ Rating:"/>
-                                            <Run Text="{Binding FocusedMod.RatingScore}"/>
-                                            <Run Text="]"/>
-                                        </TextBlock>
-                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
-                                            <Run Text="[ Size:"/>
-                                            <Run Text="{Binding FocusedMod.LatestVersion.SizeInMBs, Mode=OneWay}"/>
-                                            <Run Text="mBs ]"/>
-                                        </TextBlock>
-                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
-                                            <Run Text="[ Last Updated:"/>
-                                            <Run Text="{Binding FocusedMod.DateUpdated, StringFormat='MMM/dd/yyyy'}"/>
-                                            <Run Text="]"/>
-                                        </TextBlock>
-                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
-                                            <Run Text="[ Deprecated?:"/>
-                                            <Run Text="{Binding FocusedMod.IsDeprecated}"/>
-                                            <Run Text="]"/>
-                                        </TextBlock>
-                                        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
-                                            <Run Text="[ NSFW?:"/>
-                                            <Run Text="{Binding FocusedMod.HasNsfwContent}"/>
-                                            <Run Text="]"/>
-                                        </TextBlock>
-                                    </WrapPanel>
-                                </st:StackPanel>
-                            </Grid>
-
-                            <Rectangle Grid.Row="1" Height="2"  Fill="Black"/>
-
-                            <st:StackPanel Grid.Row="2" Margin="0 5">
-                                <TextBlock Text="{Binding FocusedMod.LatestVersion.Description}" Margin="4 4 4 15"
-                                           TextWrapping="WrapWithOverflow" FontSize="14" FontStyle="Italic"/>
-                                <Grid st:StackPanel.Fill="Fill">
+                        <materialDesign:Card Padding="11" Foreground="White" FontFamily="Consolas">
+                            <Grid Visibility="{Binding FocusedMod, Converter={c:ValueNullToInverseVisibilityConverter}}">
+                                <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="75"/>
+                                        <RowDefinition Height="124"/>
+                                        <RowDefinition Height="2"/>
                                         <RowDefinition/>
                                     </Grid.RowDefinitions>
 
-                                    <materialDesign:ColorZone>
-                                        <StackPanel HorizontalAlignment="Center"
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="124"/>
+                                            <ColumnDefinition Width="11"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Image Source="{Binding FocusedMod.LatestVersion.Icon}"/>
+
+                                        <st:StackPanel Grid.Column="2">
+                                            <TextBlock Text="{Binding FocusedMod.Name}" FontSize="24"/>
+                                            <TextBlock FontSize="16" FontStyle="Italic">
+                                        <Run Text="by"/>
+                                        <Run Text="{Binding FocusedMod.Owner}"/>
+                                            </TextBlock>
+                                            <WrapPanel st:StackPanel.Fill="Fill">
+                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" >
+                                            <Run Text="[ Latest Version:"/>
+                                            <Run Text="{Binding FocusedMod.LatestVersion.VersionNumber}"/>
+                                            <Run Text="]"/>
+                                                </TextBlock>
+                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <Run Text="[ Downloads:"/>
+                                            <Run Text="{Binding FocusedMod.LatestVersion.Downloads}"/>
+                                            <Run Text="]"/>
+                                                </TextBlock>
+                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <Run Text="[ Rating:"/>
+                                            <Run Text="{Binding FocusedMod.RatingScore}"/>
+                                            <Run Text="]"/>
+                                                </TextBlock>
+                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <Run Text="[ Size:"/>
+                                            <Run Text="{Binding FocusedMod.LatestVersion.SizeInMBs, Mode=OneWay}"/>
+                                            <Run Text="mBs ]"/>
+                                                </TextBlock>
+                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <Run Text="[ Last Updated:"/>
+                                            <Run Text="{Binding FocusedMod.DateUpdated, StringFormat='MMM/dd/yyyy'}"/>
+                                            <Run Text="]"/>
+                                                </TextBlock>
+                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <Run Text="[ Deprecated?:"/>
+                                            <Run Text="{Binding FocusedMod.IsDeprecated}"/>
+                                            <Run Text="]"/>
+                                                </TextBlock>
+                                                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <Run Text="[ NSFW?:"/>
+                                            <Run Text="{Binding FocusedMod.HasNsfwContent}"/>
+                                            <Run Text="]"/>
+                                                </TextBlock>
+                                            </WrapPanel>
+                                        </st:StackPanel>
+                                    </Grid>
+
+                                    <Rectangle Grid.Row="1" Height="2"  Fill="Black"/>
+
+                                    <st:StackPanel Grid.Row="2" Margin="0 5">
+                                        <TextBlock Text="{Binding FocusedMod.LatestVersion.Description}" Margin="4 4 4 15"
+                                           TextWrapping="WrapWithOverflow" FontSize="14" FontStyle="Italic"/>
+                                        <Grid st:StackPanel.Fill="Fill">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="60"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+
+                                            <materialDesign:ColorZone VerticalAlignment="Stretch">
+                                                <StackPanel HorizontalAlignment="Center"
                                           Orientation="Horizontal"
                                           Margin="0 4">
-                                            <RadioButton
-                                            Style="{StaticResource MaterialDesignTabRadioButton}"
-                                            Margin="4"
-                                            IsChecked="True"
-                                            Cursor="Hand">
-                                                <StackPanel>
-                                                    <materialDesign:PackIcon
-                                                    HorizontalAlignment="Center"
-                                                    Kind="Star" />
-                                                    <TextBlock
-                                                    Margin="0 4 0 0"
-                                                    Text="README" />
-                                                </StackPanel>
-                                            </RadioButton>
-                                            <RadioButton
+                                                    <RadioButton
                                                 Style="{StaticResource MaterialDesignTabRadioButton}"
                                                 Margin="4"
-                                                IsChecked="False"
+                                                IsChecked="{Binding CurrentMDS, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=ReadMe}"
                                                 Cursor="Hand">
-                                                <StackPanel>
-                                                    <materialDesign:PackIcon
+                                                        <StackPanel>
+                                                            <materialDesign:PackIcon
+                                                            HorizontalAlignment="Center"
+                                                            Kind="Star" />
+                                                            <TextBlock
+                                                            Margin="0 4 0 0"
+                                                            Text="README" />
+                                                        </StackPanel>
+                                                    </RadioButton>
+                                                    <RadioButton
+                                                Style="{StaticResource MaterialDesignTabRadioButton}"
+                                                Margin="4"
+                                                IsChecked="{Binding CurrentMDS, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Deps}"
+                                                Cursor="Hand">
+                                                        <StackPanel>
+                                                            <materialDesign:PackIcon
                                                     HorizontalAlignment="Center"
                                                     Kind="WarningDecagram" />
-                                                    <TextBlock
+                                                            <TextBlock
                                                     Margin="0 4 0 0"
                                                     Text="DEPENDENCIES" />
-                                                </StackPanel>
-                                            </RadioButton>
-                                            <RadioButton
+                                                        </StackPanel>
+                                                    </RadioButton>
+                                                    <RadioButton
                                                 Style="{StaticResource MaterialDesignTabRadioButton}"
                                                 Margin="4"
-                                                IsChecked="False"
-                                                IsEnabled="True"
+                                                IsChecked="{Binding CurrentMDS, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Versions}"
                                                 Cursor="Hand">
-                                                <StackPanel>
-                                                    <materialDesign:PackIcon
+                                                        <StackPanel>
+                                                            <materialDesign:PackIcon
                                                     HorizontalAlignment="Center"
                                                     Kind="History" />
-                                                    <TextBlock
+                                                            <TextBlock
                                                     Margin="0 4 0 0"
                                                     Text="VERSIONS" />
+                                                        </StackPanel>
+                                                    </RadioButton>
                                                 </StackPanel>
-                                            </RadioButton>
-                                        </StackPanel>
-                                    </materialDesign:ColorZone>
+                                            </materialDesign:ColorZone>
+
+                                            <!--ReadMeCard-->
+                                            <materialDesign:Card Grid.Row="1" Visibility="{Binding CurrentMDS, Converter={cx:EnumEqualToVisibilityConverter}, ConverterParameter=ReadMe}">
+                                            </materialDesign:Card>
+                                            <!---->
+
+                                            <!--DependenciesCard-->
+                                            <materialDesign:Card Grid.Row="1" Visibility="{Binding CurrentMDS, Converter={cx:EnumEqualToVisibilityConverter}, ConverterParameter=Deps}">
+                                                <ListBox ItemsSource="{Binding FocusedMod.LatestVersion.Dependencies}"/>
+                                            </materialDesign:Card>
+                                            <!---->
+
+                                            <!--ModVersionsCard-->
+                                            <materialDesign:Card Grid.Row="1" FontSize="16"
+                                                             Visibility="{Binding CurrentMDS, 
+                                            Converter={cx:EnumEqualToVisibilityConverter}, ConverterParameter=Versions}">
+                                                <ListBox ItemsSource="{Binding FocusedMod.Versions}">
+                                                    <ListBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <st:StackPanel Orientation="Horizontal" MarginBetweenChildren="20">
+                                                                <TextBlock Text="{Binding VersionNumber}"/>
+
+                                                                <TextBlock Text="{Binding DateCreated, StringFormat='MM/dd/yyyy'}"/>
+                                                            </st:StackPanel>
+                                                        </DataTemplate>
+                                                    </ListBox.ItemTemplate>
+                                                </ListBox>
+                                            </materialDesign:Card>
+                                            <!---->
+                                        </Grid>
+                                    </st:StackPanel>
 
                                 </Grid>
-                            </st:StackPanel>
-
-                        </Grid>
-                        <!---->
+                            </Grid>
+                        </materialDesign:Card>
                     </materialDesign:Card>
-                </materialDesign:Card>
+                    <!---->
 
-                <!--Mod Interaction Panel-->
-                <materialDesign:Card Background="{DynamicResource PrimaryHueDarkBrush}" Grid.Column="1" Grid.Row="1" Margin="9 9 0 9" Padding="11"
+                    <!--Mod Interaction Panel-->
+                    <materialDesign:Card Background="{DynamicResource PrimaryHueDarkBrush}" Grid.Column="1" Grid.Row="1" Margin="9 9 0 9" Padding="11"
                                      xf:Animations.Primary="{xf:Animate BasedOn={StaticResource FadeIn}, Delay=5450}">
-                    <st:StackPanel MarginBetweenChildren="9">
-                        <Button Height="43" Style="{StaticResource MaterialDesignFlatSecondaryMidBgButton}" BorderBrush="Black">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="DOWNLOAD" FontSize="18"/>
-                                <materialDesign:PackIcon Kind="DownloadBox" Width="24" Height="24" Margin="0 1 0 0"/>
-                            </StackPanel>
-                        </Button>
-                        <Rectangle Fill="#59000000" Height="2" VerticalAlignment="Center"/>
-                        <Grid st:StackPanel.Fill="Fill" VerticalAlignment="Bottom">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="2"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Button Margin="0 0 9 0" Height="43" Style="{StaticResource MaterialDesignFlatSecondaryMidBgButton}" Background="#FF00A922" BorderBrush="Black" >
+                        <st:StackPanel MarginBetweenChildren="9">
+                            <Button Height="43" Style="{StaticResource MaterialDesignFlatSecondaryMidBgButton}" BorderBrush="Black"
+                                IsEnabled="{Binding FocusedMod, Converter={c:ValueNullToInverseBoolConverter}}">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="INSTALL" FontSize="18"/>
-                                    <materialDesign:PackIcon Kind="PackageVariant" Width="24" Height="24" Margin="0 1 0 0"/>
+                                    <TextBlock Text="DOWNLOAD" FontSize="18"/>
+                                    <materialDesign:PackIcon Kind="DownloadBox" Width="24" Height="24" Margin="0 1 0 0"/>
                                 </StackPanel>
                             </Button>
-                            <Button Grid.Column="2" Margin="9 0 0 0" Height="43" Style="{StaticResource MaterialDesignFlatSecondaryMidBgButton}" BorderBrush="Black" Background="Firebrick">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="REMOVE" FontSize="18"/>
-                                    <materialDesign:PackIcon Kind="Bomb" Width="24" Height="24" Margin="0 1 0 0"/>
-                                </StackPanel>
-                            </Button>
-                        </Grid>
-                    </st:StackPanel>
-                </materialDesign:Card>
+                            <Rectangle Fill="#59000000" Height="2" VerticalAlignment="Center"/>
+                            <Grid st:StackPanel.Fill="Fill" VerticalAlignment="Bottom">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="2"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Button Margin="0 0 9 0" Height="43" Style="{StaticResource MaterialDesignFlatSecondaryMidBgButton}" 
+                                    Background="#FF00A922" BorderBrush="Black" 
+                                IsEnabled="{Binding FocusedMod, Converter={c:ValueNullToInverseBoolConverter}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="INSTALL" FontSize="18"/>
+                                        <materialDesign:PackIcon Kind="PackageVariant" Width="24" Height="24" Margin="0 1 0 0"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Grid.Column="2" Margin="9 0 0 0" Height="43" Style="{StaticResource MaterialDesignFlatSecondaryMidBgButton}" 
+                                    BorderBrush="Black" Background="Firebrick"
+                                IsEnabled="{Binding FocusedMod, Converter={c:ValueNullToInverseBoolConverter}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="REMOVE" FontSize="18"/>
+                                        <materialDesign:PackIcon Kind="Bomb" Width="24" Height="24" Margin="0 1 0 0"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                        </st:StackPanel>
+                    </materialDesign:Card>
+                </Grid>
             </Grid>
-        </Grid>     
+
+            <materialDesign:DialogHost
+                    x:Name="MainDialogHost"
+                    DialogTheme="Inherit">
+                <materialDesign:DialogHost.DialogContent>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="75"/>
+                        </Grid.RowDefinitions>
+                        
+                        <materialDesign:Card Content="{Binding CurrentDiag}"/>
+
+                        <st:StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1" MarginBetweenChildren="4" Margin="4 0">
+                            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}" Content="{materialDesign:PackIcon Kind=Check}"/>
+                            <Button Style="{StaticResource MaterialDesignFloatingActionMiniSecondaryButton}" Content="{materialDesign:PackIcon Kind=No}"/>
+                        </st:StackPanel>
+                    </Grid>
+                </materialDesign:DialogHost.DialogContent>
+            </materialDesign:DialogHost>
+
+        </Grid>
     </Border>
 </Window>

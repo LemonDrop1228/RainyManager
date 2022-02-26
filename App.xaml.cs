@@ -48,6 +48,8 @@ namespace RainyManager
 
                     services.AddSingleton<INotificationService, NotificationService>();
 
+                    services.AddSingleton<ILoggerService, LoggerService>();
+
                     services.AddSingleton<IThundersoreAPIService, ThundersoreAPIService>();
 
                     Assembly.GetEntryAssembly().GetTypesAssignableFrom<IBaseView, BaseView>().ForEach((t) =>

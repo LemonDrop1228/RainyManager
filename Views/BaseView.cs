@@ -29,7 +29,6 @@ namespace RainyManager.Views
 
     public record ViewMenuData
     {
-        public int ViewIndex { get; set; }
         public string ViewLabel { get; set; }
         public PackIconKind ViewIcon { get; set; }
         public ViewType ViewType { get; set; }
